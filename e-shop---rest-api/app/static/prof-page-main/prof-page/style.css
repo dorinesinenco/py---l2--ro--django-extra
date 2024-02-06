@@ -1,0 +1,174 @@
+body {
+  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
+}
+.about {
+  width: 1680px;
+  background-color: #e3edf7;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  width: 71%;
+  background-color: #e3edf7;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 100px 0;
+  color: #08203a;
+}
+.about .container .info {
+  display: flex;
+  flex-direction: column;
+  width: 48%;
+  gap: 20px;
+}
+.about .container .info h1 {
+  font-size: 3em;
+  font-weight: 700;
+  line-height: 1.2em;
+  font-family: "Poppins", sans-serif;
+}
+.about .container .info h1 span {
+  color: #e70280;
+}
+.about .container .info h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  order: -1;
+  color: #e70280;
+}
+.about .container .info p {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 1em;
+  line-height: 1.5em;
+  text-align: justify;
+  color: #7888a2;
+}
+
+.about .container form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.about .container form .tabs {
+  display: flex;
+  justify-content: space-between;
+}
+.about .container form .tabs label {
+  background-image: linear-gradient(
+    103deg,
+    rgb(227, 237, 247),
+    rgb(255, 255, 255)
+  );
+  /*filter: drop-shadow(-1px -1px 5px white);*/
+  box-shadow: -2px -2px 10px rgb(255, 255, 255), 2px 2px 10px rgb(181, 199, 218);
+  border-radius: 4px;
+  width: 30%;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1.125em;
+  line-height: 2em;
+  padding: 8px 0;
+  text-align: center;
+}
+.about .container form .tabs input:checked + label {
+  background-image: linear-gradient(to right, #590fb7, #ff0076);
+  color: white;
+}
+.about .container form .tabs input[type="radio"] {
+  display: none;
+}
+
+.about .container ul {
+  position: relative;
+}
+.about .container .dots h3 {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1em;
+  margin-bottom: 0.625em;
+}
+.about .container .dots p {
+  font-family: "Roboto", sans-serif;
+  font-size: 1em;
+  font-weight: 400;
+  color: #666666;
+  margin-bottom: 0.625em;
+}
+.about .container .dots h3::after {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f111";
+  font-size: 4px;
+  position: absolute;
+  left: 6.5px;
+  transform: translateY(6.5px);
+}
+.about .container .dots h3::before {
+  content: "";
+  display: block;
+  width: 0.9em;
+  height: 0.9em;
+  border: 1px solid #e70280;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+}
+.about .container .dots h3,
+.about .container .dots p {
+  margin-left: 30px;
+}
+.about .container form a {
+  width: 30%;
+  padding: 1.5em 0;
+  color: #08203a;
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-size: 1em;
+  line-height: 1em;
+  border: 2px solid transparent;
+  border-image: linear-gradient(to right, #590fb7, #ff0076);
+  border-image-slice: 1;
+  text-decoration: none;
+  position: relative;
+}
+.about .container form a div {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 1.3em;
+}
+.about .container form a::before {
+  content: "";
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  background-image: linear-gradient(to right, #ff0076, #590fb7);
+  position: absolute;
+  height: 3em;
+  top: 0;
+  left: 0;
+  width: 0;
+  transition: all 0.4s ease;
+}
+.about .container form a::after {
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  content: "\f019";
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 1.3em;
+}
+.about .container form a:hover::before {
+  width: 100%;
+}
+
+.about .container form a:hover div,
+.about .container form a:hover::after {
+  color: white;
+  transition: all 0.4s ease;
+}

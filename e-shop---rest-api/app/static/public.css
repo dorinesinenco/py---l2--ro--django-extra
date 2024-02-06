@@ -1,0 +1,22 @@
+body {
+    background-color: #222;
+    color: white;
+}
+.product {
+    border: 1px solid white;
+    width: 500px;
+    padding: 10px;
+    margin: 50px auto;
+}
+.actions {
+    border: 1px solid white;
+    width: 500px;
+    padding: 10px;
+    margin: 10px auto;
+}
+
+.actions button {
+    padding: 20px;
+    font-weight: bold;
+    font-size: 30px;
+}

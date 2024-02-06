@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  e_shop_pg:
+    image: postgres:15.4-alpine3.18
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=qazwsx
+      - POSTGRES_DB=e_shop_db    
+    
+    ports:
+      - 5777:5432
+
+    volumes:
+      - ./data:/var/lib/postgresql/data  
