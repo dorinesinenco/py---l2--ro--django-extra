@@ -424,3 +424,46 @@ loadProduct ()
                    data = JSON.parse(response)
                    ...
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# SPLITTING THE CODE / MODULARITY
+
+- sub applications
+- sub modules
+- flat
+
+
+
+
+
+
+
+
+app/
+ |
+ +--- urls.py 'admin/' <------+ include()
+ |                            |
+ +--- admin/                  |
+       |                      |
+       +- urls.py ------------+
+       |     |
+       |     +-- 'products/' < BREAD 
+       |
+       +- views.py
+            |
+            +-- ProductView
+
+
+ 

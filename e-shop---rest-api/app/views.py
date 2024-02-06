@@ -76,9 +76,3 @@ class MoneyView(generics.RetrieveAPIView):
 
 
 
-# ADMIN VIEWS    
-class ProductAdminView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer 
-    # TODO: access policy
-
