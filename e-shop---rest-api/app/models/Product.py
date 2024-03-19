@@ -17,11 +17,8 @@ class Product(Model):
         blank = False,
         null = False  
     )
-    image = models.CharField(
-        max_length = 128,
-        blank = False,
-        null = False
-    )
+
+
     description = models.CharField( 
         max_length = 4096
     )

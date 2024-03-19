@@ -209,6 +209,10 @@ Product
 
 
 
+
+
+
+
         BROWSER 
            |
         window  <---- GET / <---- index.html
@@ -456,14 +460,463 @@ app/
  +--- urls.py 'admin/' <------+ include()
  |                            |
  +--- admin/                  |
-       |                      |
-       +- urls.py ------------+
-       |     |
-       |     +-- 'products/' < BREAD 
+ |     |                      |
+ |     +- urls.py ------------+
+ |     |     |
+ |     |     +-- 'products/' < BREAD 
+ |     |
+ |     +- views.py
+ |          |
+ |          +-- ProductView
+ |
+ +--- client/ 
        |
-       +- views.py
+       +- urls.py
+       |
+       +- views_api.py
+       |        |
+       |        +-- ...
+       |
+       +- views_pages.py
+                |
+                +-- ...
+
+
+# MODELS
+
+Payment
+ + id
+ + amount -------> Money
+ + client -------> Client
+ + order ------> Order
+ + completed (ts)
+
+Client
+ + id 
+ + name
+ + email
+ + password
+ + phone
+ + created (ts)
+ + last_online (ts)
+
+Order <----+
+ + id      |
+ + total -----------> Money
+ + client ----------> Client 
+ + state -------> "placed", "processed", ...
+ + created (ts)
+ + updated (ts)
+           |
+OrderItem  |
+ + id      | 
+ + order --+
+ + product ---+
+ + quantity   |
+ + cost ------------> Money
+              |
+Product <-----+
+ + id
+ + name
+ + image
+ + description
+ + available_quantity
+ + created
+ + updated
+
+ + price_standard ----+
+ + price_discount --+ |
+                    | |
+Money <-------------+<+
+ + id 
+ + amount
+ + currency
+
+
+
+
+
+
+
+------------------------------------+----+
+                                    | x ------> deleteProduct(1)  
+------------------------------------+----+ 
+                                    | x ------> deleteProduct(2)
+------------------------------------+----+ 
+                                    | x ------> deleteProduct(3)
+------------------------------------+----+ 
+
+
+x---------------x---------------x---------------x----------------->
+      click_0                        click_1  
+
+
+------------------------------------+----+ 
+                                    | x ------ 
+------------------------------------+----+     \
+                                    | x ---------> #deleteProductModal > confirm > deleteProduct(?)
+------------------------------------+----+     /
+                                    | x ------ 
+------------------------------------+----+ 
+
+
+
+
+
+
+
+
+REST API
+
+
+
+/products ------------> Product
+
+
+
+/money ------------> Money
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       +-----------------------------------+
+                       |                                   |
+GET /money/multi/<str:pks> ----------> MoneyBCustomView    |
+                                           |               v
+                                           +--> get(..., pks)
+                                                           |
+                                                           v
+                                                     Custom QuerySet -------------- > db
+                                                           |
+                                                           v
+                                                      Serialization(data)            
+                                                           | 
+                                                           |
+                                                           v
+                                          return
+                                           | 
+    <--------------------------------------+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+QuerySet API
+
+.action(field__operation, value)
+
+
+
+
+
+
+
+
+
+
+## Auth 
+
+
+
+                                 AUTH SCHEMES 
+                                  |
+                                  +-- basic
+                                  |
+                                  +-- session
+                                  |
+                                  +-- token  --+
+                                  |            |
+                                  .            | 
+                                              /                        +---------- permitted ----------->
+                         authentication      /                        / 
+                        /                   /                        /
+                                           v                        /
+--------------------- req ------------->  req -> has permission? --+
+                       ^                   |                        \
+                       |                   +-- user                  \ 
+                   credentials             +-- auth                   \
+                                                                       +------------- forbidden -------->
+
+
+
+
+
+
+
+
+
+
+               +----- templated based views
+              /        |
+             /         +-- session
+--------->  + 
+             \ 
+              \
+               +----- API views
+                       |
+                       +-- token
+
+
+
+
+
+
+
+
+
+                    +----- admin -------->
+                   /
+                  /
+                 /
+----- req ----> + -------- client -------> 
+                 \
+                  \
+                   \
+                    +----- public ------->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                      +--- retrieve order ----->
+                     /
+                    +---- auth <---- validate JWT
+   credentials?    /                  1. order_Id
+       V          /                   2. user_id
+----- req -----> +                    3. expires
+       |          \
+       v           \
+      [H]           +--- create order ------>
+       |
+     Authorization   
+    'Token xyz......'
+
+
+
+
+
+
+
+
+    req
+------------>  /client/token --------+
+                                     |
+<------------------------------------+   
+
+
+
+
+
+
+
+# JWT
+
+1. Extend standard user MODEL
+
+User 
+  ^ 
+  |
+ inheritances (OOP, django) 
+  |
+Client <---- rel ---- Order 
+
+
+
+
+
+
+
+
+
+
+
+
+
+User (auth_user)       Client (app_client)               
+id  <-------+------------ user_ptr_id
+name        |             phone
+...         | 
             |
-            +-- ProductView
+            +---------------+
+                            |   Order (app_order)
+                            |    id
+                            |    ...
+                            +--  client_id
 
 
- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Model (fields) <--------- token <------ verify --------- auth
+         |
+       1. custom: User/Client:  email or phone, uuid   ---> larger scope
+       2. custom: Order: client_id and order.id        ---> narrower scope
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# User authentication strategy
+       
+      Client
+       v
+  CONFIRM ORDER 
+       |
+       +------------ req (AJAX) --------------> /orders/{product_id}
+                     client_email                  |
+                     client_phone                  |
+                     ...                           |
+                                                  view (CreateOrderView)
+                                                   |
+                                                   +---> find by email/number or create account  
+                                                   |
+                                                   +---> create Order and link it to this account
+                                                   |
+                                                   .
+                                                   <---- here
+                                                   .
+        <------------- res ------------------------+                                            
+                     1. order data
+                     2. JWT (client_id) <--- Access Token
+
+
+
+
+
+
+       payload = {
+         'user_id': ....,
+         'expires': ...,
+       }
+         |
+         |
+       encode <----- HS256  
+         | ^
+         | +----- SECRET_KEY
+         v
+        code
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+JWT (with tokens)
+
+
+  > Access Token
+  > Refresh Token
+
+
+
+
+
+
+
+
+
+
+
+
+# PAYMENT (gateway)
+
+  > offsite (redirect)
+  > onsite 
+
+
+
+
+
+
+
+
+
+
+
+PAYMENT LINK
+
+
+USER
+ v
+click
+ v                    (key)   
+PAY ------/pay ---------- python ---------------->  API stripe
+                                                     |
+                                                     v
+                                                   price 
+                                                     |
+                                                     v
+redirect <-------------------------------------------+ payment link     
+   |
+   +-------------------------------------------------+
+                                                     |
+                                                     v
+                                                   form   
+   +-------------------------------------------------+
+   |                      redirect success
+   v
+ HW*: /api/confirm  
